@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reclutamiento | Plataforma Minimalista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4c8.png">
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root {
+      --primary: #6d6afd;
+      --secondary: #5bd1f9;
+      --bg: #f6f7fb;
+      --card: #fff;
+      --accent: #f2f3fb;
+      --radius: 18px;
+    }
+    body.dark-mode {
+        background: #19192c;
+        color: #e3e5f0;
+    }
+    body.dark-mode .gradient-header {
+        background: linear-gradient(90deg, #35377c 12%, #286b87 90%);
+    }
+    body.dark-mode .container {
+        background: #23233c;
+        box-shadow: 0 4px 22px 0 rgba(24,24,40,.28);
+    }
+    body.dark-mode label, body.dark-mode h1 {
+        color: #e5e7fa;
+    }
+    body.dark-mode input, body.dark-mode select {
+        background: #23233c;
+        color: #f2f3fa;
+        border-color: #373872;
+    }
+    body.dark-mode input:focus,
+    body.dark-mode select:focus {
+        border-color: #5bd1f9;
+        background: #1a1b2d;
+    }
+    body.dark-mode .candidatos-list {
+        background: #23233c;
+        box-shadow: 0 1px 8px rgba(20,20,38,0.17);
+    }
+    body.dark-mode .candidato {
+        background: #23233c;
+        border-bottom: 1px solid #373872;
+    }
+    body.dark-mode .cv-link,
+    body.dark-mode .linkedin-link {
+        background: #212242;
+        color: #6ad8f9;
+    }
+    body.dark-mode .cv-link:hover,
+    body.dark-mode .linkedin-link:hover {
+        background: #28317a;
+        color: #6d6afd;
+    }
+    body.dark-mode .tab-btn.active {
+        background: #23233c;
+        color: #5bd1f9;
+    }
+    body.dark-mode .tab-btn {
+        background: #222234;
+        color: #b7b8cc;
+    }
+    body.dark-mode .file-upload-btn {
+        background: linear-gradient(90deg, #35377c 10%, #286b87 90%);
+        color: #c7f5ff;
+    }
+    body.dark-mode .file-upload-btn:hover {
+        background: linear-gradient(90deg, #4949c1 10%, #377aa4 90%);
+    }
+    body.dark-mode .loading-modal {
+        background: #23233c;
+        color: #e3e5f0;
+    }
+    body.dark-mode .delete-btn {
+        background: #4c2323 !important;
+        color: #ffc6c6 !important;
+    }
+    body {
+        background: var(--bg);
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        color: #23253a;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        transition: filter .25s;
+    }
+    .gradient-header {
+      width: 100%;
+      padding: 36px 0 26px 0;
+      background: linear-gradient(90deg, #7b6ff7 15%, #51d1f6 90%);
+      text-align: center;
+      border-radius: 0 0 32px 32px;
+      margin-bottom: 0;
+      box-shadow: 0 4px 18px 0 rgba(120,120,200,.08);
+    }
+    .gradient-header h1 {
+      margin: 0;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      text-shadow: 0 1px 8px rgba(100,100,170,.04);
+    }
+    .container {
+      max-width: 510px;
+      margin: 40px auto 0;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 22px 0 rgba(120,120,170,.10);
+      padding: 30px 30px 14px 30px;
+      position: relative;
+      z-index: 2;
+      transition: max-width .2s, padding .2s;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      margin-bottom: 30px;
+    }
+    label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #48507a;
+      margin-bottom: 2px;
+    }
+    input, select {
+      padding: 11px 13px;
+      border-radius: 10px;
+      border: 1.1px solid #dde2ee;
+      font-size: 1rem;
+      background: #f8f8fc;
+      outline: none;
+      transition: border .22s, box-shadow .18s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(110,130,255,0.07);
+    }
+    .file-upload-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .file-upload-btn {
+      background: linear-gradient(90deg, #7b6ff7 10%, #51d1f6 90%);
+      color: #fff;
+      padding: 10px 26px;
+      border: none;
+      border-radius: 9px;
+      font-size: 1.04rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, box-shadow .14s;
+      box-shadow: 0 1px 6px rgba(100,100,180,0.09);
+      margin-right: 7px;
+    }
+    .file-upload-btn:hover {
+      background: linear-gradient(90deg, #665df4 10%, #49c1e5 90%);
+    }
+    .file-upload-text {
+      font-size: .96rem;
+      color: #888db0;
+      font-style: italic;
+      max-width: 60%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    button[type="submit"] {
+      margin-top: 6px;
+      padding: 13px 0;
+      background: linear-gradient(90deg,var(--primary) 10%, var(--secondary) 90%);
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 13px;
+      font-size: 1.09rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(90,110,240,0.08);
+      transition: background .18s, transform .1s, opacity .2s;
+    }
+    button[type="submit"]:active {
+      background: #685ed6;
+      transform: scale(0.98);
+    }
+    button[disabled], .file-upload-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 17px;
+      justify-content: center;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px 10px 0 0;
+      font-weight: 600;
+      color: #6a6d78;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      font-size: 1rem;
+      letter-spacing: -.01em;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 -2px 8px rgba(120,120,180,0.04);
+    }
+    .candidatos-list {
+      border-radius: 14px;
+      background: #fafaff;
+      box-shadow: 0 1px 8px rgba(50,50,70,0.06);
+      padding: 12px 0 0 0;
+      min-height: 80px;
+      margin-bottom: 18px;
+      transition: filter .25s;
+    }
+    .candidato {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid #ececf0;
+      padding: 14px 18px;
+      border-radius: 9px;
+      background: #fff;
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+      animation: fadeInUp .5s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .candidato:nth-child(n) { animation-delay: .05s; }
+    .candidato:nth-child(2n) { animation-delay: .10s; }
+    .candidato:nth-child(3n) { animation-delay: .15s; }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .candidato-info {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 1rem;
+    }
+    .campo-con-copiar {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .candidato label {
+      font-size: .91rem;
+      color: #8a8fb7;
+      font-weight: 400;
+      margin-right: 4px;
+    }
+    .cv-link, .linkedin-link {
+      margin-top: 2px;
+      display: inline-block;
+      background: #e4e6fa;
+      color: #5354e4;
+      font-size: .97rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background .15s, color .13s;
+      margin-right: 7px;
+    }
+    .cv-link:hover, .linkedin-link:hover {
+      background: #d0d4f7;
+      color: #2e2d8b;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 4px;
+      font-size: 1.1em;
+      color: #7b6ff7;
+      transition: color .17s;
+      border-radius: 4px;
+      margin-left: 1px;
+    }
+    .copy-btn:active, .copy-btn.copied {
+      color: #51d1f6;
+      background: #e8effe;
+    }
+    .linkedin-link[disabled] {
+      background: #e4e4e4;
+      color: #a0a0a0;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+    .empty {
+      color: #aaa;
+      text-align: center;
+      padding: 30px 0 20px 0;
+      font-size: 1.06rem;
+    }
+    .loading-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(90, 110, 240, 0.15);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .2s;
+      pointer-events: all;
+    }
+    .loading-modal {
+      background: #fff;
+      padding: 30px 35px 26px 35px;
+      border-radius: 18px;
+      box-shadow: 0 2px 24px rgba(100,120,250,0.11);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .lds-dual-ring {
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+    }
+    .lds-dual-ring:after {
+      content: " ";
+      display: block;
+      width: 34px;
+      height: 34px;
+      margin: 3px;
+      border-radius: 50%;
+      border: 5px solid #7b6ff7;
+      border-color: #7b6ff7 transparent #51d1f6 transparent;
+      animation: lds-dual-ring 1.1s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    @media (max-width: 700px) {
+      .container {
+        max-width: 99vw;
+        margin: 40px 1vw 0 1vw;
+        padding: 13px 2vw 7px 2vw;
+      }
+      .gradient-header {
+        padding: 22px 0 17px 0;
+        border-radius: 0 0 21px 21px;
+      }
+      .gradient-header h1 {
+        font-size: 1.22rem;
+      }
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 8px 0 0 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .candidato {
+        padding: 10px 3px;
+        font-size: .96rem;
+      }
+      .tabs {
+        gap: 1px;
+        margin-bottom: 10px;
+      }
+      .tab-btn {
+        font-size: .91rem;
+        padding: 8px 0;
+      }
+      .candidato-info {
+        gap: 6px;
+      }
+      .file-upload-btn {
+        padding: 10px 14px;
+      }
+      .loading-modal {
+        padding: 22px 8vw 15px 8vw;
+      }
+    }
+    @media (max-width: 400px) {
+      .container {
+        padding: 2px 0 0 0;
+      }
+      form > div {
+        gap: 3px;
+      }
+      input, select {
+        padding: 7px 6px;
+        font-size: .93rem;
+      }
+      .loading-modal {
+        padding: 18px 2vw 12px 2vw;
+      }
+    }
+  </style>
+</head>
+<body>
+    <button id="darkModeToggle" style="
+    position: fixed; 
+    top: 18px; 
+    right: 24px; 
+    z-index: 99;
+    border-radius: 50%;
+    padding: 10px;
+    border: none;
+    background: #eee;
+    color: #444;
+    box-shadow: 0 1px 7px rgba(80,80,110,0.09);
+    font-size: 1.21em;
+    cursor: pointer;
+    transition: background .18s, color .18s;
+    ">🌙</button>
+
+    <div class="gradient-header">
+        <h1>Reclutamiento | Plataforma Minimalista</h1>
+    </div>
+    <div class="container">
+        <form id="candidato-form" autocomplete="off">
+        <div>
+            <label>Nombre completo</label>
+            <input type="text" name="nombre" required>
+        </div>
+        <div>
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" required>
+        </div>
+        <div>
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" pattern="[0-9+ ]{8,}" required>
+        </div>
+        <div>
+            <label>Puesto</label>
+            <select name="puesto" required>
+            <option value="ventas">Ventas</option>
+            <option value="community">Community Manager</option>
+            </select>
+        </div>
+        <div>
+            <label>LinkedIn (opcional)</label>
+            <input type="url" name="linkedin" placeholder="https://linkedin.com/in/usuario">
+        </div>
+        <div>
+            <label>CV (PDF, máx. 5MB)</label>
+            <div class="file-upload-wrapper">
+            <button type="button" class="file-upload-btn" id="customFileBtn">Subir archivo</button>
+            <span class="file-upload-text" id="fileName">Ningún archivo seleccionado</span>
+            <input type="file" name="cv" id="realFileInput" accept=".pdf,.doc,.docx" required>
+            </div>
+        </div>
+        <button type="submit" id="submitBtn">Agregar candidato</button>
+        </form>
+        <div class="tabs">
+        <button class="tab-btn active" data-puesto="ventas">Ventas</button>
+        <button class="tab-btn" data-puesto="community">Community Managers</button>
+        </div>
+        <div id="candidatos-list" class="candidatos-list"></div>
+    </div>
+    <div id="loadingBackdrop" class="loading-backdrop" style="display:none;">
+        <div class="loading-modal">
+        <div class="lds-dual-ring"></div>
+        <span>Subiendo candidato...</span>
+        </div>
+    </div>
+    <script>
+        // URL de tu backend
+        const API_URL = "https://postulaciones.onrender.com";
+
+        // Custom file input logic
+        const customFileBtn = document.getElementById('customFileBtn');
+        const realFileInput = document.getElementById('realFileInput');
+        const fileNameText = document.getElementById('fileName');
+        customFileBtn.addEventListener('click', () => realFileInput.click());
+        realFileInput.addEventListener('change', () => {
+        fileNameText.textContent = realFileInput.files.length ? realFileInput.files[0].name : 'Ningún archivo seleccionado';
+        });
+
+        // Loading overlay
+        const loadingBackdrop = document.getElementById('loadingBackdrop');
+        function showLoading(show = true) {
+        loadingBackdrop.style.display = show ? 'flex' : 'none';
+        document.body.style.pointerEvents = show ? 'none' : '';
+        document.body.style.filter = show ? 'blur(2.5px)' : '';
+        }
+
+        // Tabs y lógica de carga
+        const form = document.getElementById('candidato-form');
+        const listDiv = document.getElementById('candidatos-list');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const submitBtn = document.getElementById('submitBtn');
+        let currentPuesto = 'ventas';
+
+        tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentPuesto = btn.dataset.puesto;
+            loadCandidatos();
+        });
+        });
+
+        form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        // Validar archivo <5MB
+        const archivo = realFileInput.files[0];
+        if (archivo && archivo.size > 5 * 1024 * 1024) {
+            alert('El CV es demasiado grande (máximo 5MB).');
+            return;
+        }
+        // Validar LinkedIn (si está lleno)
+        const linkedin = form.linkedin.value.trim();
+        if (linkedin && !/^https?:\/\/(www\.)?linkedin\.com\/.*$/i.test(linkedin)) {
+            alert('El enlace de LinkedIn debe iniciar con https://linkedin.com/');
+            return;
+        }
+
+        // Desactivar interfaz y mostrar loading
+        submitBtn.disabled = true;
+        customFileBtn.disabled = true;
+        showLoading(true);
+
+        try {
+            const res = await fetch(API_URL, {
+            method: "POST",
+            body: formData
+            });
+            const data = await res.json();
+            showLoading(false);
+            submitBtn.disabled = false;
+            customFileBtn.disabled = false;
+            if (data.ok) {
+            alert("Candidato registrado con éxito ✅");
+            form.reset();
+            fileNameText.textContent = 'Ningún archivo seleccionado';
+            loadCandidatos();
+            } else {
+            alert("Error: " + (data.error || "No se pudo registrar"));
+            }
+        } catch (err) {
+            showLoading(false);
+            submitBtn.disabled = false;
+            customFileBtn.disabled = false;
+            alert("Error de conexión");
+        }
+        });
+
+        async function loadCandidatos() {
+        listDiv.innerHTML = '<div class="empty">Cargando...</div>';
+        try {
+            const res = await fetch(API_URL + "?puesto=" + currentPuesto);
+            const data = await res.json();
+            if (!data.length) {
+            listDiv.innerHTML = '<div class="empty">No hay candidatos registrados para este puesto.</div>';
+            return;
+            }
+            listDiv.innerHTML = "";
+            data.forEach(c => {
+                const div = document.createElement('div');
+                div.className = "candidato";
+                // --- Mensaje personalizado según puesto ---
+                let mensaje = "";
+                if (currentPuesto === "ventas") {
+                    mensaje = `Buenas tardes, ${c.nombre}. 
+                    Mi nombre es Miguel y soy parte del equipo de Boltity. Queremos agradecerte por tu interés en el puesto de Agente de Ventas Autónomo y por haberte postulado. Tras revisar tu perfil profesional, estamos contentos con lo que hemos visto y creemos que podríamos tener una excelente oportunidad para trabajar juntos.
+
+                    Nos gustaría agendar una llamada para poder platicar más a fondo sobre el puesto y cómo podrías contribuir a nuestro equipo.
+                    Podemos coordinar dentro de los siguientes horarios disponibles:
+                    🕔 De lunes a viernes, entre 17:00 y 19:00 hs
+                    📆 Sábados, entre 10:00 y 14:00 hs
+
+                    Avísame qué día y hora te resulta más cómodo, así agendamos.
+                    Quedo pendiente de tu respuesta.
+
+                    Saludos cordiales,
+                    Miguel, equipo de Boltity.`;
+                } else if (currentPuesto === "community") {
+                    mensaje = `Hola ${c.nombre},
+
+                    Gracias por enviarnos tu postulación.
+                    Estuvimos revisando tu perfil y nos gustaría avanzar contigo para una entrevista inicial en línea por el rol de practicante de Community Manager en Boltity.
+
+                    La idea es tener una breve conversación para conocerte mejor, contarte sobre el enfoque del puesto y resolver cualquier duda que tengas.
+
+                    Podemos coordinar dentro de los siguientes horarios disponibles:
+                    🕔 De lunes a viernes, entre 17:00 y 19:00 hs
+                    📆 Sábados, entre 10:00 y 14:00 hs
+
+                    Avísame qué día y hora te resulta más cómodo, así agendamos.
+                    Quedo atento a tu respuesta.
+                    —
+                    Miguel, equipo Boltity`;
+                }
+            // --- HTML del candidato ---
+            div.innerHTML = `
+                <div class="candidato-info">
+                    <span class="campo-con-copiar">
+                    <label>Nombre:</label> ${c.nombre}
+                    </span>
+                    <span class="campo-con-copiar">
+                    <label>Email:</label> ${c.correo}
+                    <button class="copy-btn" data-copy="${c.correo}" title="Copiar email">📋</button>
+                    </span>
+                    <span class="campo-con-copiar">
+                    <label>Tel:</label> ${c.telefono}
+                    <button class="copy-btn" data-copy="${c.telefono}" title="Copiar teléfono">📋</button>
+                    </span>
+                    <span class="campo-con-copiar">
+                    <label>LinkedIn:</label>
+                    ${c.linkedin
+                        ? `<a class="linkedin-link" href="${c.linkedin}" target="_blank">${c.linkedin}</a>
+                        <button class="copy-btn" data-copy="${c.linkedin}" title="Copiar LinkedIn">📋</button>`
+                        : `<a class="linkedin-link" href="javascript:void(0)" disabled style="pointer-events:none;opacity:0.45;">No registrado</a>`}
+                    </span>
+                </div>
+                <div style="margin-top:8px;">
+                    <a class="cv-link" href="${c.url_cv + '?inline=true'}" target="_blank" rel="noopener" style="margin-right:9px;">Ver CV</a>
+                    <button class="cv-link download-btn"
+                        data-cv-url="${c.url_cv}"
+                        data-cv-nombre="${c.nombre_cv || 'cv.pdf'}"
+                        style="border:none;cursor:pointer;">
+                        Descargar CV
+                    </button>
+                    <button class="cv-link copy-msg-btn"
+                        data-nombre="${c.nombre}"
+                        data-puesto="${currentPuesto}"
+                        style="background:#f7f7fc;color:#6d6afd; border:none;cursor:pointer;">
+                        Copiar mensaje
+                    </button>
+                    <button class="cv-link delete-btn"
+                        data-id="${c._id}"
+                        style="border:none;cursor:pointer;background:#ffd7d7;color:#cd3232;">
+                        🗑️ Eliminar
+                    </button>
+                </div>
+                `;
+            listDiv.appendChild(div);
+            });
+
+            // Solo para botones de descarga:
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.onclick = function () {
+                    const url = btn.getAttribute('data-cv-url');
+                    const filename = btn.getAttribute('data-cv-nombre') || 'cv.pdf';
+
+                    fetch(url)
+                    .then(resp => resp.blob())
+                    .then(blob => {
+                        const a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(blob);
+                        a.download = filename;
+                        a.click();
+                        setTimeout(() => window.URL.revokeObjectURL(a.href), 1500);
+                    });
+                };
+            });
+
+
+            // Botón eliminar
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.onclick = async function () {
+                    if (!confirm('¿Seguro que quieres eliminar este candidato? Esta acción no se puede deshacer.')) return;
+                    const id = btn.getAttribute('data-id');
+                    btn.disabled = true;
+                    btn.textContent = 'Eliminando...';
+                    try {
+                        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                        const data = await res.json();
+                        if (data.ok) {
+                            loadCandidatos();
+                        } else {
+                            alert('No se pudo eliminar: ' + (data.error || 'Error desconocido'));
+                            btn.disabled = false;
+                            btn.textContent = '🗑️ Eliminar';
+                        }
+                    } catch {
+                        alert('Error de red');
+                        btn.disabled = false;
+                        btn.textContent = '🗑️ Eliminar';
+                    }
+                };
+            });
+
+
+            // Botón "Copiar mensaje" — genera el texto al vuelo, sin null
+            document.querySelectorAll('.copy-msg-btn').forEach(btn => {
+            btn.onclick = function () {
+                const nombre = btn.getAttribute('data-nombre') || 'candidato';
+                const puesto = btn.getAttribute('data-puesto');
+                let mensaje = "";
+                if (puesto === "ventas") {
+                mensaje = `Buenas tardes, ${nombre}.\nMi nombre es Miguel y soy parte del equipo de Boltity. Queremos agradecerte por tu interés en el puesto de Agente de Ventas Autónomo y por haberte postulado. Tras revisar tu perfil profesional, estamos contentos con lo que hemos visto y creemos que podríamos tener una excelente oportunidad para trabajar juntos.\n\nNos gustaría agendar una llamada para poder platicar más a fondo sobre el puesto y cómo podrías contribuir a nuestro equipo. ¿Qué te parece si coordinamos una llamada para el día lunes a las 5pm?. Si ese horario no te conviene, por favor, házmelo saber y con gusto buscamos una opción que te sea más conveniente.\n\nQuedo pendiente de tu respuesta.\n\nSaludos cordiales,\nMiguel, equipo de Boltity.`;
+                } else if (puesto === "community") {
+                mensaje = `Hola ${nombre},\n\nGracias por enviarnos tu postulación.\nEstuvimos revisando tu perfil y nos gustaría avanzar contigo para una entrevista inicial en línea por el rol de practicante de Community Manager en Boltity.\n\nLa idea es tener una breve conversación para conocerte mejor, contarte sobre el enfoque del puesto y resolver cualquier duda que tengas.\n\nPodemos coordinar dentro de los siguientes horarios disponibles:\n🕔 De lunes a viernes, entre 17:00 y 19:00 hs\n📆 Sábados, entre 10:00 y 14:00 hs\n\nAvísame qué día y hora te resulta más cómodo, así agendamos.\nQuedo atento a tu respuesta.\n—\nMiguel, equipo Boltity`;
+                }
+                navigator.clipboard.writeText(mensaje);
+                btn.textContent = '¡Copiado!';
+                setTimeout(() => btn.textContent = 'Copiar mensaje', 1200);
+            }
+            });
+
+
+            // Activar botones copiar
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.onclick = function () {
+                    const val = btn.getAttribute('data-copy');
+                    if (val) {
+                        navigator.clipboard.writeText(val);
+                        btn.classList.add('copied');
+                        btn.innerText = '✔️';
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.innerText = '📋';
+                        }, 900);
+                    }
+                };
+            });
+        } catch (err) {
+            listDiv.innerHTML = '<div class="empty">Error al cargar candidatos.</div>';
+        }
+        }
+
+        // Inicial
+        loadCandidatos();
+
+
+        // Modo oscuro
+        const darkBtn = document.getElementById('darkModeToggle');
+        function setDarkMode(on) {
+        if (on) {
+            document.body.classList.add('dark-mode');
+            darkBtn.textContent = '☀️';
+            localStorage.setItem('darkmode', 'yes');
+        } else {
+            document.body.classList.remove('dark-mode');
+            darkBtn.textContent = '🌙';
+            localStorage.setItem('darkmode', 'no');
+        }
+        }
+        darkBtn.onclick = () => setDarkMode(!document.body.classList.contains('dark-mode'));
+        // Preferencia previa
+        if (localStorage.getItem('darkmode') === 'yes') setDarkMode(true);
+
+    </script>
+</body>
+</html>
